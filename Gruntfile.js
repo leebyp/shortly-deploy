@@ -35,7 +35,7 @@ module.exports = function(grunt) {
     uglify: {
       my_target: {
         files: {
-          'public/dist/built.min.js' : ['public/dist/built.js']
+          'public/dist/built.min.js': ['public/dist/built.js']
         }
       }
     },
@@ -55,6 +55,13 @@ module.exports = function(grunt) {
     },
 
     cssmin: {
+      minify: {
+        expand: true,
+        cwd: 'public/',
+        src: ['style.css'],
+        dest: 'public/dist/',
+        ext: '.min.css'
+      }
     },
 
     watch: {
@@ -112,7 +119,8 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
     'concat',
-    'uglify'
+    'uglify',
+    'cssmin'
     // jshint
     // mocha tests
   ]);
