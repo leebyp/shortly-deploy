@@ -41,9 +41,9 @@ module.exports = function(grunt) {
     },
 
     jshint: {
-      files: [
-        // Add filespec list here
-      ],
+      files: {
+        src: ['public/client/*.js', 'server.js', 'server-config.js', 'Gruntfile.js']
+      },
       options: {
         force: 'true',
         jshintrc: '.jshintrc',
@@ -120,8 +120,8 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [
     'concat',
     'uglify',
-    'cssmin'
-    // jshint
+    'cssmin',
+    'jshint'
     // mocha tests
   ]);
 
