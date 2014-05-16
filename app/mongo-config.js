@@ -3,8 +3,19 @@ var crypto = require('crypto');
 var bcrypt = require('bcrypt-nodejs');
 var Promise = require('bluebird');
 
-var urlSchema;
-var userSchema;
+
+var mongoURI = 'mongodb://localhost/shortly';
+mongoose.connect(mongoURI);
+
+var db = mongoose.connection;
+db.on('error', function() {
+  console.log('MongoDB error.');
+});
+db.on('open', function() {
+  console.log('MongoDB open.');
+});
+
+//========================================================
 
 var urlSchema = new mongoose.Schema({
   url: String,
@@ -35,8 +46,7 @@ userSchema.pre('save', function(next) {
   cipher(this.password, null, null).bind(this)
     .then(function(hash) {
       this.password = hash;
-    });
-  next();
+    }).then(next);
 });
 
 userSchema.methods.comparePassword = function(attemptedPassword, cb){
