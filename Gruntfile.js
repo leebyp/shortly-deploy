@@ -1,7 +1,10 @@
 module.exports = function(grunt) {
 
   grunt.initConfig({
+    //so we can refer to the values of properties in package.json
     pkg: grunt.file.readJSON('package.json'),
+
+    //task config for other tasks to run w/ grunt
     concat: {
       dist: {
         src: [
@@ -92,6 +95,7 @@ module.exports = function(grunt) {
     },
   });
 
+  //load plugins, equivilent of modules in express
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
@@ -118,6 +122,7 @@ module.exports = function(grunt) {
   // Main grunt tasks
   ////////////////////////////////////////////////////
 
+  //register tasks for grunt in command line eg. $ grunt test
   grunt.registerTask('test', [
     'mochaTest'
   ]);

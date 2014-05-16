@@ -1,3 +1,5 @@
+//creates connection to mongoDB database using mongoose ORM
+
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 var bcrypt = require('bcrypt-nodejs');
@@ -17,6 +19,7 @@ db.on('open', function() {
 
 //========================================================
 
+//creates url schema for url-links
 var urlSchema = new mongoose.Schema({
   url: String,
   base_url: String,
@@ -25,6 +28,7 @@ var urlSchema = new mongoose.Schema({
   visits: {type: Number, default: 0}
 });
 
+//shortens url into a code property before saving to database
 urlSchema.pre('save', function(next) {
   var shasum = crypto.createHash('sha1');
   shasum.update(this.url);
@@ -32,15 +36,18 @@ urlSchema.pre('save', function(next) {
   next();
 });
 
+//exports model created from schema
 exports.Link = mongoose.model('Url', urlSchema);
 
 //========================================================
 
+//creates user schema
 var userSchema = new mongoose.Schema({
   username: {type: String, required: true, index: {unique: true}},
   password: {type: String, required: true}
 });
 
+//hashes user password before saving to database using bcrypt without salting
 userSchema.pre('save', function(next) {
   var cipher = Promise.promisify(bcrypt.hash);
   cipher(this.password, null, null).bind(this)
@@ -49,10 +56,12 @@ userSchema.pre('save', function(next) {
     }).then(next);
 });
 
+//method for documents to compare password to the hashed password in the database on login
 userSchema.methods.comparePassword = function(attemptedPassword, cb){
   bcrypt.compare(attemptedPassword, this.password, function(err, isMatch) {
     cb(isMatch);
   });
 };
 
+//exports model created from schema
 exports.User = mongoose.model('User', userSchema);
